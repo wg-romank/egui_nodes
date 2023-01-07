@@ -1,4 +1,4 @@
-use eframe::{egui, epi};
+use eframe::{egui, App};
 use egui_nodes::{Context, LinkArgs, NodeArgs, NodeConstructor, PinArgs, PinShape};
 
 struct MyApp {
@@ -8,6 +8,7 @@ struct MyApp {
 
 pub fn example_graph(ctx: &mut Context, links: &mut Vec<(usize, usize)>, ui: &mut egui::Ui) {
     // add nodes with attributes
+    let mut s = String::from("This is an edit");
     let nodes = vec![
         NodeConstructor::new(
             0,
@@ -26,7 +27,7 @@ pub fn example_graph(ctx: &mut Context, links: &mut Vec<(usize, usize)>, ui: &mu
             },
             |ui| ui.label("Input"),
         )
-        .with_static_attribute(1, |ui| ui.label("Can't Connect to Me"))
+        .with_static_attribute(1, |ui| ui.text_edit_multiline(&mut s))
         .with_output_attribute(
             2,
             PinArgs {
@@ -69,22 +70,18 @@ impl Default for MyApp {
     }
 }
 
-impl epi::App for MyApp {
-    fn name(&self) -> &str {
-        "My egui App"
-    }
-
-    fn update(&mut self, ctx: &egui::CtxRef, frame: &epi::Frame) {
+impl App for MyApp {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("My egui Application");
             example_graph(&mut self.ctx, &mut self.links, ui);
         });
 
         // Resize the native window to be just the size we need it to be:
-        frame.set_window_size(ctx.used_size());
+        // frame.set_window_size(ctx.used_size());
     }
 }
 
 fn main() {
-    eframe::run_native(Box::new(MyApp::default()), eframe::NativeOptions::default());
+    eframe::run_native("My egui App", eframe::NativeOptions::default(), Box::new(|_| Box::new(MyApp::default())));
 }

@@ -145,12 +145,12 @@ impl Context {
             self.pins.reset();
             self.links.reset();
 
-            self.hovered_node_index.take();
-            self.interactive_node_index.take();
-            self.hovered_link_idx.take();
+            // self.hovered_node_index.take();
+            // self.interactive_node_index.take();
+            // self.hovered_link_idx.take();
             self.hovered_pin_flags = AttributeFlags::None as usize;
-            self.deleted_link_idx.take();
-            self.snap_link_idx.take();
+            // self.deleted_link_idx.take();
+            // self.snap_link_idx.take();
 
             self.node_indices_overlapping_with_mouse.clear();
             self.element_state_change = ElementStateChange::None as usize;
@@ -166,9 +166,8 @@ impl Context {
             );
             {
                 let ui = &mut ui;
-                ui.set_clip_rect(
-                    self.canvas_rect_screen_space.intersect(ui.ctx().input().screen_rect()),
-                );
+                let is = self.canvas_rect_screen_space.intersect(ui.ctx().input().screen_rect());
+                ui.set_clip_rect(is);
                 ui.painter().rect_filled(
                     self.canvas_rect_screen_space,
                     0.0,
